@@ -12,15 +12,16 @@ public class user {
 
     @Id
     @GeneratedValue(strategy =GenerationType.IDENTITY )
-    private long id;    
+    private Long id;    
     private String username;    
     private String lastName;
     private String email;
+    private int years;
     
-    public long getId() {
+    public Long getId() {
         return id;
     }
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
     public String getUsername() {
@@ -41,7 +42,18 @@ public class user {
     public void setEmail(String email) {
         this.email = email;
     }
+    public int getAge() {
+        return years;
+    }
+    public void setAge(int years) {
+        this.years = years;
+    }
 
-    
-    
+    public user(Long id, String username, String lastName, String email, int years) {
+        this.id = id;
+        this.username = username;
+        this.lastName = lastName;
+        this.email = email;
+        this.years = years;
+    }
 }

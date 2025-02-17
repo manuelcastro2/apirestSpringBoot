@@ -3,6 +3,8 @@ package com.apirest.crud.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +25,12 @@ public class userController {
 
     @PostMapping("/")
     public user create(@RequestBody user u){
-        return userservice.save(u);
+        if(u.getAge()<18) {
+            u.setUsername(u.getUsername().toUpperCase());
+            u.setLastName(u.getLastName().toUpperCase());
+        }
+        user createdUser = userservice.save(u);
+        return createdUser;
     }
 
     @GetMapping("/")
@@ -32,8 +39,11 @@ public class userController {
     }
 
     @GetMapping("/{id}")
-    public user getById(@PathVariable("id") Long id){
-        return userservice.getUserById(id);
+    public Object getById(@PathVariable("id") Long id){
+        user u= userservice.getUserById(id);
+    if(u==null) return "usuario no encontrado";
+
+        return u;
     }
 
     @DeleteMapping("/{id}")

@@ -3,6 +3,7 @@ package com.apirest.crud.Service;
 import java.util.List;
 
 import com.apirest.crud.model.user;
+import org.springframework.http.ResponseEntity;
 
 public interface userService {
 
