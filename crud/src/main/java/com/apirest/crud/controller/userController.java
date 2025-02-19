@@ -1,6 +1,7 @@
 package com.apirest.crud.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.apirest.crud.Service.userImplService;
-import com.apirest.crud.model.user;
+import com.apirest.crud.model.User;
 
 @RestController
 @RequestMapping("api/users")
@@ -24,24 +25,24 @@ public class userController {
     private userImplService userservice;
 
     @PostMapping("/")
-    public user create(@RequestBody user u){
-        if(u.getAge()<18) {
-            u.setUsername(u.getUsername().toUpperCase());
-            u.setLastName(u.getLastName().toUpperCase());
+    public User create(@RequestBody User u){
+        
+        User createdUser = userservice.save(u);
+        if(createdUser.getAge()<18) {
+            createdUser.setUsername(createdUser.getUsername().toUpperCase());
+            createdUser.setLastName(createdUser.getLastName().toUpperCase());
         }
-        user createdUser = userservice.save(u);
         return createdUser;
     }
 
     @GetMapping("/")
-    public List<user> getAll(){
+    public List<User> getAll(){
         return userservice.getAll();
     }
 
     @GetMapping("/{id}")
-    public Object getById(@PathVariable("id") Long id){
-        user u= userservice.getUserById(id);
-    if(u==null) return "usuario no encontrado";
+    public User getById(@PathVariable("id") Long id){
+        User u= userservice.getUserById(id);
 
         return u;
     }

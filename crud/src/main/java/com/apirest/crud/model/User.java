@@ -8,7 +8,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
-public class user {
+public class User {
 
     @Id
     @GeneratedValue(strategy =GenerationType.IDENTITY )
@@ -49,11 +49,22 @@ public class user {
         this.years = years;
     }
 
-    public user(Long id, String username, String lastName, String email, int years) {
+    public User(Long id, String username, String lastName, String email, int years) {
         this.id = id;
         this.username = username;
         this.lastName = lastName;
         this.email = email;
         this.years = years;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", years=" + years +
+                '}';
     }
 }

@@ -4,9 +4,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.apirest.crud.model.user;
+import com.apirest.crud.model.User;
 import com.apirest.crud.repository.userRepository;
 
 @Service
@@ -16,18 +17,19 @@ public class userImplService implements userService {
     private userRepository userrepository;
 
     @Override
-    public user save(user u) {
-
+    public User save(User u) {
         return userrepository.save(u);
     }
+    
+    
     @Override
-    public user getUserById(Long id) {
-       Optional<user> optionalUser= userrepository.findById(id);
-       return optionalUser.get();
+    public User getUserById(Long id) {
+       Optional<User> u= userrepository.findById(id);
+       return u.get();
     }
 
     @Override
-    public List<user> getAll() {
+    public List<User> getAll() {
      return userrepository.findAll();
     }
 

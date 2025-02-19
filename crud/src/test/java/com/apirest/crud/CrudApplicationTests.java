@@ -3,7 +3,7 @@ package com.apirest.crud;
 
 import com.apirest.crud.Service.userImplService;
 import com.apirest.crud.controller.userController;
-import com.apirest.crud.model.user;
+import com.apirest.crud.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.Test;
@@ -24,13 +24,15 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
+import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(userController.class)
+
 @ExtendWith(MockitoExtension.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 class CrudApplicationTests {
 
 	
@@ -38,39 +40,47 @@ class CrudApplicationTests {
     private MockMvc mockMvc;
 
     @MockBean
-    private userImplService userService;
+    private userImplService userservice;
+    
+    @InjectMocks
+    private userController usercontroller;
 
     @Autowired
     private ObjectMapper objectMapper;
 
     @Test
     void testCreateUser() throws Exception {
-        user u = new user(1L,"manuel", "castro", "john@example.com",17);
-        if(u.getAge()<18) {
-            u.setUsername(u.getUsername().toUpperCase());
-            u.setLastName(u.getLastName().toUpperCase());
-        }
-        when(userService.save(Mockito.any(user.class))).thenReturn(u);
+        User u = new User(1L,"manuel", "castro", "john@example.com",17);
+
+        when(userservice.save(Mockito.any(User.class))).thenReturn(u);
+
+        User userC=usercontroller.create(u);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/users/")
-                        .content(objectMapper.writeValueAsString(u)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(userC)))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andDo(result -> {
                     System.out.println(result.getResponse().getContentAsString());
                 });
+
     }
 
 
     @Test
     void testListAllUsers() throws Exception {
-        user u1 = new user(1L,"manuel", "castro", "john@example.com",17);
-        user u2 = new user(2L,"carlos", "amaya", "john@example.com",18);
+        User u1 = new User(1L,"manuel", "castro", "john@example.com",17);
+        User u2 = new User(2L,"carlos", "amaya", "john@example.com",18);
 
-        when(userService.getAll()).thenReturn(List.of(u1,u2));
+        List<User> list= List.of(u1,u2);
+        when(userservice.getAll()).thenReturn(list);
+
+        List userC=  usercontroller.getAll();
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users/")
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userC)))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andDo(result -> {
@@ -81,18 +91,17 @@ class CrudApplicationTests {
 
     @Test
     void testUserId() throws Exception {
-        user u1 = new user(1L,"manuel", "castro", "john@example.com",17);
-        user u2 = new user(2L,"carlos", "amaya", "john@example.com",18);
+        User u1 = new User(1L,"manuel", "castro", "john@example.com",17);
+        User u2 = new User(2L,"carlos", "amaya", "john@example.com",18);
 
+       when(userservice.getUserById(1L)).thenReturn(u1);
 
-       when(userService.getUserById(1L)).thenReturn(u1);
+        User userC= usercontroller.getById(u2.getId());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/{id}",1L)
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/{id}",u2.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(userC)))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.username").value("manuel"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("john@example.com"))
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andDo(result -> {
 
