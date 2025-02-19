@@ -1,5 +1,6 @@
 package com.apirest.crud.controller;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +28,7 @@ public class userController {
     @PostMapping("/")
     public User create(@RequestBody User u){
         
-        User createdUser = userservice.save(u);
+        User createdUser =(User) userservice.save(u);
         if(createdUser.getAge()<18) {
             createdUser.setUsername(createdUser.getUsername().toUpperCase());
             createdUser.setLastName(createdUser.getLastName().toUpperCase());
@@ -36,13 +37,14 @@ public class userController {
     }
 
     @GetMapping("/")
-    public List<User> getAll(){
-        return userservice.getAll();
+    public List<Object> getAll(){
+
+        return  userservice.getAll();
     }
 
     @GetMapping("/{id}")
-    public User getById(@PathVariable("id") Long id){
-        User u= userservice.getUserById(id);
+    public Object getById(@PathVariable("id") Long id){
+        Object u= userservice.getUserById(id);
 
         return u;
     }

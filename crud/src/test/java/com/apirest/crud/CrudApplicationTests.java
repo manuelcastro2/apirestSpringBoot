@@ -73,7 +73,7 @@ class CrudApplicationTests {
         User u1 = new User(1L,"manuel", "castro", "john@example.com",17);
         User u2 = new User(2L,"carlos", "amaya", "john@example.com",18);
 
-        List<User> list= List.of(u1,u2);
+        List<Object> list= List.of(u1,u2);
         when(userservice.getAll()).thenReturn(list);
 
         List userC=  usercontroller.getAll();
@@ -96,7 +96,7 @@ class CrudApplicationTests {
 
        when(userservice.getUserById(1L)).thenReturn(u1);
 
-        User userC= usercontroller.getById(u2.getId());
+        User userC= (User) usercontroller.getById(u2.getId());
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users/{id}",u2.getId())
                         .contentType(MediaType.APPLICATION_JSON)

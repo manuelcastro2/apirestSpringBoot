@@ -36,8 +36,8 @@ class TestService {
 		
 		when(userrepository.findById(1L)).thenReturn(Optional.of(u1));
 		
-		User response=userservice.getUserById(1L);
-
+		User response=(User)userservice.getUserById(1L);
+		System.out.println(response);
 		assertNotNull(response, "the object not null");
 		 assertEquals("mario", response.getUsername());
 		 assertEquals("mario.bros@email.com", response.getEmail());
@@ -63,11 +63,13 @@ class TestService {
 
 		when(userrepository.save(u1)).thenReturn(u1);
 
-		User response=userservice.save(u1);
+		User response=(User)userservice.save(u1);
 
 		assertNotNull(response, "the object not null");
 		assertEquals("mario", response.getUsername());
 		assertEquals("mario.bros@email.com", response.getEmail());
 		System.out.println(response);
 	}
+
+
 }
