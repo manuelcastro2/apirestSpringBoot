@@ -3,7 +3,6 @@ package com.apirest.crud.Service;
 import java.util.List;
 import java.util.Optional;
 
-import com.apirest.crud.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,36 +16,56 @@ public class userImplService implements userService {
     private userRepository userrepository;
 
     @Override
-    public Object save(User u) {
-        Object obj = userrepository.save(u);
+    public User save(User u) {
+        User obj = userrepository.save(u);
         if (obj == null) {
-            return new Response(null, "user not found");
+            throw new NullPointerException("user not found");
         }
         return obj;
     }
     
     
     @Override
-    public Object getUserById(Long id) {
-       Object obj= userrepository.findById(id).orElse(null);
+    public Optional<User> getUserById(Long id) {
+       Optional<User> obj= userrepository.findById(id);
         if (obj == null) {
-            return new Response(null, "user not exists");
+             throw new NullPointerException("user not exists");
         }
         return obj;
     }
 
     @Override
-    public List<Object> getAll() {
+    public List<User> getAll() {
         List obj=userrepository.findAll();
         if (obj == null) {
-            return (List<Object>) new Response(null, "user not exists");
+             throw new NullPointerException("users not exists");
         }
         return  obj;
     }
 
     @Override
-    public void deleteUser(Long id) {
-         userrepository.deleteById(id);
+    public boolean deleteUser(Long id) {
+        try {
+            if(userrepository.existsById(id)){
+                userrepository.deleteById(id);
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            throw new NullPointerException("the object witch ID " + id + " not exists");
+        }
+
+
     }
-    
+
+    @Override
+    public User updateUser(Long id,User user) {
+
+            if(!userrepository.existsById(id)) {
+              throw new NullPointerException  ("the user not exists");
+            }
+            User userUpdate=userrepository.save(user);
+            return userUpdate;
+    }
+
 }

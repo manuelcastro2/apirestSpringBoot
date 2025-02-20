@@ -11,13 +11,13 @@ target/
 .settings
 .springBeans
 .sts4-cache
-
+*.class
 ### IntelliJ IDEA ###
 .idea
 *.iws
 *.iml
 *.ipr
-
+crud/bin/mvnw
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
