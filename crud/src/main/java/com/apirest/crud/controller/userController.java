@@ -5,11 +5,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.apirest.crud.dtos.UserDto;
-import com.apirest.crud.dtos.userDtoImpl;
+import com.apirest.crud.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.apirest.crud.Service.userImplService;
+import com.apirest.crud.Service.UserImplService;
 import com.apirest.crud.model.User;
 
 @RestController
@@ -17,26 +17,33 @@ import com.apirest.crud.model.User;
 public class userController {
     
     @Autowired
-    private userImplService userservice;
+    private UserImplService userservice;
 
-    @Autowired
-    private userDtoImpl userDtoImpl;
-
-    @PostMapping("/")
-    public UserDto create(@RequestBody User u){
-        
-        User createdUser = userservice.save(u);
-        UserDto dto= userDtoImpl.convertToDTO(createdUser);
-        if(createdUser.getAge()<18) {
-            dto.setUsername(dto.getUsername().toUpperCase());
-            dto.setLastName(dto.getLastName().toUpperCase());
-        }
+    private UserDto convertToDTO(User user) {
+        UserDto dto = new UserDto();
+        dto.setUsername(user.getUsername());
+        dto.setLastName(user.getLastName());
         return dto;
     }
 
+    @PostMapping("/")
+    public Response<UserDto> create(@RequestBody User u){
+        
+        if(equals(u)) return new Response<>(null,"user is empty");
+
+        User createdUser = userservice.save(u).getData();
+        UserDto dto = convertToDTO(createdUser);
+
+        if (createdUser.getAge() < 18) {
+            dto.setUsername(dto.getUsername().toUpperCase());
+            dto.setLastName(dto.getLastName().toUpperCase());
+        }
+        return new Response<>(dto,"user created");
+    }
+
     @GetMapping("/")
-    public List<UserDto> getAll(){
-        List<User> ListUser=userservice.getAll();
+    public Response<List<UserDto>> getAll(){
+        List<User> ListUser=userservice.getAll().getData();
         List<UserDto> userDTOs = ListUser.stream()
                 .map(user->{
                     UserDto dto= new UserDto();
@@ -45,32 +52,34 @@ public class userController {
                     return dto;
                 }).collect(Collectors.toList());
 
-        return userDTOs;
+        return new Response<>(userDTOs,"user list");
 
     }
 
     @GetMapping("/{id}")
-    public UserDto getById(@PathVariable("id") Long id){
-       Optional<User> u= userservice.getUserById(id);
-        UserDto dto= userDtoImpl.convertToDTO(u.get());
+    public Response<UserDto> getById(@PathVariable("id") Long id){
 
-        return dto;
+        if(equals(id.toString())) return new Response<>(null,"foul the id the user");
+
+        Optional<User> u= userservice.getUserById(id).getData();
+        UserDto dto= convertToDTO(u.get());
+        return new Response<>(dto,"user found");
     }
 
     @PutMapping("/{id}")
-    public UserDto updateUserById(@PathVariable("id")Long id,@RequestBody User user){
-            User update= userservice.updateUser(id,user);
-            UserDto dto = userDtoImpl.convertToDTO(update);
-            return dto;
-
+    public Response<UserDto> updateUserById(@PathVariable("id")Long id,@RequestBody User user){
+        if(equals(id.toString())) return new Response<>(null,"id is required");
+        if(equals(user)) return new Response<>(null,"data the user is required");
+            User update= userservice.updateUser(id,user).getData();
+            UserDto dto =convertToDTO(update);
+        return new Response<>(dto,"user updated");
     }
 
     @DeleteMapping("/{id}")
-    public boolean deleteUserById(@PathVariable("id") Long id){
-        if(userservice.deleteUser(id)){
-            return true;
-        }
-        return false;
+    public Response<Boolean> deleteUserById(@PathVariable("id") Long id){
+        if(equals(id.toString())) return new Response<>(null,"id is required");
+        Boolean user=userservice.deleteUser(id).getData();
+        return new Response<>(user,"user do deleted");
     }
 
 

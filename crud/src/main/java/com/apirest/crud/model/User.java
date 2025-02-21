@@ -16,7 +16,7 @@ public class User {
     private String username;    
     private String lastName;
     private String email;
-    private int years;
+    private Integer years;
     
     public Long getId() {
         return id;
@@ -42,14 +42,14 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-    public int getAge() {
+    public Integer getAge() {
         return years;
     }
-    public void setAge(int years) {
+    public void setAge(Integer years) {
         this.years = years;
     }
 
-    public User(Long id, String username, String lastName, String email, int years) {
+    public User(Long id, String username, String lastName, String email, Integer years) {
         this.id = id;
         this.username = username;
         this.lastName = lastName;

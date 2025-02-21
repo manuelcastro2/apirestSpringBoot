@@ -12,6 +12,7 @@ target/
 .springBeans
 .sts4-cache
 *.class
+./CrudApplication.class
 ### IntelliJ IDEA ###
 .idea
 *.iws

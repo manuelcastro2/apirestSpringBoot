@@ -1,29 +1,31 @@
 package com.apirest.crud.model;
 
-public class Response {
+public class Response<T> {
 
-    private Object data;
-    private String mensage;
+    private T data;
+    private String message;
 
+    public Response() {}
 
-    public Response(Object data, String mensage) {
+    public Response(T data, String message) {
         this.data = data;
-        this.mensage = mensage;
+        this.message = message;
     }
 
-    public Object getData() {
+    // Getters y setters
+    public T getData() {
         return data;
     }
 
-    public void setData(Object data) {
+    public void setData(T data) {
         this.data = data;
     }
 
-    public String getMensage() {
-        return mensage;
+    public String getMessage() {
+        return message;
     }
 
-    public void setMensage(String mensage) {
-        this.mensage = mensage;
+    public void setMessage(String message) {
+        this.message = message;
     }
 }
