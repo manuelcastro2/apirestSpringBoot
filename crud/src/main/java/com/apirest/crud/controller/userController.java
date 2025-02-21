@@ -2,7 +2,10 @@ package com.apirest.crud.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.apirest.crud.dtos.UserDto;
+import com.apirest.crud.dtos.userDtoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,33 +19,49 @@ public class userController {
     @Autowired
     private userImplService userservice;
 
+    @Autowired
+    private userDtoImpl userDtoImpl;
+
     @PostMapping("/")
-    public User create(@RequestBody User u){
+    public UserDto create(@RequestBody User u){
         
         User createdUser = userservice.save(u);
+        UserDto dto= userDtoImpl.convertToDTO(createdUser);
         if(createdUser.getAge()<18) {
-            createdUser.setUsername(createdUser.getUsername().toUpperCase());
-            createdUser.setLastName(createdUser.getLastName().toUpperCase());
+            dto.setUsername(dto.getUsername().toUpperCase());
+            dto.setLastName(dto.getLastName().toUpperCase());
         }
-        return createdUser;
+        return dto;
     }
 
     @GetMapping("/")
-    public List<User> getAll(){
-        return  userservice.getAll();
+    public List<UserDto> getAll(){
+        List<User> ListUser=userservice.getAll();
+        List<UserDto> userDTOs = ListUser.stream()
+                .map(user->{
+                    UserDto dto= new UserDto();
+                    dto.setUsername(user.getUsername());
+                    dto.setLastName(user.getLastName());
+                    return dto;
+                }).collect(Collectors.toList());
+
+        return userDTOs;
+
     }
 
     @GetMapping("/{id}")
-    public Optional<User> getById(@PathVariable("id") Long id){
-        Optional<User> u= userservice.getUserById(id);
+    public UserDto getById(@PathVariable("id") Long id){
+       Optional<User> u= userservice.getUserById(id);
+        UserDto dto= userDtoImpl.convertToDTO(u.get());
 
-        return u;
+        return dto;
     }
 
     @PutMapping("/{id}")
-    public User updateUserById(@PathVariable("id")Long id,@RequestBody User user){
+    public UserDto updateUserById(@PathVariable("id")Long id,@RequestBody User user){
             User update= userservice.updateUser(id,user);
-            return update;
+            UserDto dto = userDtoImpl.convertToDTO(update);
+            return dto;
 
     }
 

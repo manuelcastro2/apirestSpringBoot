@@ -56,13 +56,13 @@ class CrudApplicationTests {
 
         when(userservice.save(any(User.class))).thenReturn(u);
 
-
-
         mockMvc.perform(MockMvcRequestBuilders.post("/api/users/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(u)))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.username").value("MANUEL"))
+                .andExpect(jsonPath("$.lastName").value("CASTRO"))
                 .andDo(result -> {
                     System.out.println(result.getResponse().getContentAsString());
                 });
@@ -81,6 +81,10 @@ class CrudApplicationTests {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users/")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].username").value("manuel"))
+                .andExpect(jsonPath("$[0].lastName").value("castro"))
+                .andExpect(jsonPath("$[1].username").value("carlos"))
+                .andExpect(jsonPath("$[1].lastName").value("amaya"))
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andDo(result -> {
                     System.out.println(result.getResponse().getContentAsString());
@@ -90,14 +94,14 @@ class CrudApplicationTests {
     @Test
     void testUserId() throws Exception {
         User u1 = new User(1L,"manuel", "castro", "john@example.com",17);
-        User u2 = new User(2L,"carlos", "amaya", "john@example.com",18);
+
 
        when(userservice.getUserById(1L)).thenReturn(Optional.of(u1));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/{id}",u2.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(u1)))
-                .andExpect(jsonPath("$[0].id").value(1L))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/{id}",1L)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.username").value("manuel"))
+                .andExpect(jsonPath("$.lastName").value("castro"))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andDo(result -> {
@@ -128,15 +132,15 @@ class CrudApplicationTests {
         User u2 = new User(1L,"momo", "momo", "john@example.com",18);
 
         when(userservice.save(any(User.class))).thenReturn(u1);
-        when(userservice.getUserById(1L)).thenReturn(Optional.of(u1));
         when(userservice.updateUser(eq(1L),any(User.class))).thenReturn(u2);
 
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/users/{id}",u2.getId())
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/users/{id}",1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(u2)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.username").value("momo"))
+                .andExpect(jsonPath("$.lastName").value("momo"))
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andDo(result -> {
                     System.out.println(result.getResponse().getContentAsString());
