@@ -94,7 +94,7 @@ class CrudApplicationTests {
         User u1 = new User(1L,"manuel", "castro", "john@example.com",17);
 
 
-       when(userservice.getUserById(1L)).thenReturn(new Response<>(Optional.of(u1),"user found"));
+       when(userservice.getUserById(any(Long.class))).thenReturn(new Response<>(Optional.of(u1),"user found"));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users/{id}",1L)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -112,7 +112,7 @@ class CrudApplicationTests {
     void testDeleteUser() throws Exception{
         User u2 = new User(1L,"carlos", "amaya", "john@example.com",18);
 
-        when(userservice.deleteUser(1L)).thenReturn(new Response<>(true,"user do deleted"));
+        when(userservice.deleteUser(any(Long.class))).thenReturn(new Response<>(true,"user do deleted"));
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/users/{id}",u2.getId())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -130,7 +130,7 @@ class CrudApplicationTests {
         User u2 = new User(1L,"momo", "momo", "john@example.com",18);
 
         when(userservice.save(any(User.class))).thenReturn(new Response<>(u1,"user created"));
-        when(userservice.updateUser(eq(1L),any(User.class))).thenReturn(new Response<>(u2,"user updated"));
+        when(userservice.updateUser(any(Long.class),any(User.class))).thenReturn(new Response<>(u2,"user updated"));
 
 
         mockMvc.perform(MockMvcRequestBuilders.put("/api/users/{id}",1L)

@@ -33,9 +33,10 @@ class TestService {
 
 		User u1=new User(1L, "mario", "castro", "mario.bros@email.com", 18);
 		
-		when(userrepository.findById(1L)).thenReturn(Optional.of(u1));
+		when(userrepository.findById(any(Long.class))).thenReturn(Optional.of(u1));
 		
 		Response<Optional<User>> response=userservice.getUserById(1L);
+
 
 		 assertEquals("mario", response.getData().get().getUsername());
 		 assertEquals("mario.bros@email.com", response.getData().get().getEmail());

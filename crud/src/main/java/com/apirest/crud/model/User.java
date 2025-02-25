@@ -57,14 +57,4 @@ public class User {
         this.years = years;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", years=" + years +
-                '}';
-    }
 }

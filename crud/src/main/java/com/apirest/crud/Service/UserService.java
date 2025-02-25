@@ -6,7 +6,7 @@ import java.util.Optional;
 import com.apirest.crud.model.Response;
 import com.apirest.crud.model.User;
 
-public interface userService {
+public interface UserService {
 
     public Response<User> save(User u);
     public Response<Optional<User>> getUserById(Long id);

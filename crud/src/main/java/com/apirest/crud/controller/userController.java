@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.apirest.crud.dtos.UserDto;
 import com.apirest.crud.model.Response;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,11 +14,13 @@ import com.apirest.crud.Service.UserImplService;
 import com.apirest.crud.model.User;
 
 @RestController
+@Api(value = "api users")
 @RequestMapping("api/users")
 public class userController {
     
     @Autowired
     private UserImplService userservice;
+    private Response response;
 
     private UserDto convertToDTO(User user) {
         UserDto dto = new UserDto();

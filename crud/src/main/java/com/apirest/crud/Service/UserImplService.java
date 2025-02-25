@@ -11,7 +11,7 @@ import com.apirest.crud.model.User;
 import com.apirest.crud.repository.userRepository;
 
 @Service
-public class UserImplService implements userService {
+public class UserImplService implements UserService {
 
     @Autowired
     private userRepository userrepository;

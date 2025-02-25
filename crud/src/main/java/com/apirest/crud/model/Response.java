@@ -5,14 +5,11 @@ public class Response<T> {
     private T data;
     private String message;
 
-    public Response() {}
-
     public Response(T data, String message) {
         this.data = data;
         this.message = message;
     }
 
-    // Getters y setters
     public T getData() {
         return data;
     }
