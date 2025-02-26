@@ -1,6 +1,7 @@
 package com.apirest.crud.controller;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.apirest.crud.Service.UserImplService;
 import com.apirest.crud.model.User;
+import com.validation.Validator;
 
 @RestController
 @Api(value = "api users")
@@ -37,9 +39,17 @@ public class userController {
         User createdUser = userservice.save(u).getData();
         UserDto dto = convertToDTO(createdUser);
 
+        Validator v=new Validator();
+
+        dto.setUsername(v.validatorSpace(dto.getUsername()));
+        dto.setLastName(v.validatorSpace(dto.getLastName()));
+
+        String lengthName=v.validatorLength(dto.getUsername());
+        if(!Objects.equals(lengthName, dto.getUsername())) return new Response<>(null,lengthName);
+
         if (createdUser.getAge() < 18) {
-            dto.setUsername(dto.getUsername().toUpperCase());
-            dto.setLastName(dto.getLastName().toUpperCase());
+            dto.setUsername(v.validatorMayus(dto.getUsername()));
+            dto.setLastName(v.validatorMayus(dto.getLastName()));
         }
         return new Response<>(dto,"user created");
     }

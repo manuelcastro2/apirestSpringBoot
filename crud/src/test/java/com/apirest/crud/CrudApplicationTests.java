@@ -50,7 +50,7 @@ class CrudApplicationTests {
 
     @Test
     void testCreateUser() throws Exception {
-        User u = new User(1L,"manuel", "castro", "john@example.com",17);
+        User u = new User(1L,"bernardo ", "cas tro ", "john@example.com",17);
 
         when(userservice.save(any(User.class))).thenReturn( new Response<>(u, "User created"));
 
@@ -59,7 +59,7 @@ class CrudApplicationTests {
                         .content(objectMapper.writeValueAsString(new Response<User>(u, "User created").getData())))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.data.username").value("MANUEL"))
+                .andExpect(jsonPath("$.data.username").value("BERNARDO"))
                 .andExpect(jsonPath("$.data.lastName").value("CASTRO"))
                 .andDo(result -> {
                     System.out.println(result.getResponse().getContentAsString());
