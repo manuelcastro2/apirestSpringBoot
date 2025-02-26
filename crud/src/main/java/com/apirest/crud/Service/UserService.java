@@ -9,7 +9,7 @@ import com.apirest.crud.model.User;
 public interface UserService {
 
     public Response<User> save(User u);
-    public Response<Optional<User>> getUserById(Long id);
+    public Response<User> getUserById(Long id);
     public Response<List<User>> getAll();
     public Response<Boolean> deleteUser(Long id);
     public Response<User> updateUser( Long id,User user);

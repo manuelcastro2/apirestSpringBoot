@@ -94,7 +94,7 @@ class CrudApplicationTests {
         User u1 = new User(1L,"manuel", "castro", "john@example.com",17);
 
 
-       when(userservice.getUserById(any(Long.class))).thenReturn(new Response<>(Optional.of(u1),"user found"));
+       when(userservice.getUserById(any(Long.class))).thenReturn(new Response<>(u1,"user found"));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users/{id}",1L)
                         .contentType(MediaType.APPLICATION_JSON))

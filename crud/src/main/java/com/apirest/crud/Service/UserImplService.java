@@ -28,12 +28,13 @@ public class UserImplService implements UserService {
     
     
     @Override
-    public Response<Optional<User>> getUserById(Long id) {
+    public Response<User> getUserById(Long id) {
        try{
            Optional<User> obj= userrepository.findById(id);
-           return new Response<>(obj,"user found");
+           if(obj.isEmpty()) return new Response<>(null,"user not found");
+           return new Response<>(obj.get(),"user found");
        }catch (Exception e){
-           return new Response<>(null, "user not found: ");
+           return new Response<>(null, "user not found");
        }
 
     }
